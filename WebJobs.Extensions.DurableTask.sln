@@ -16,6 +16,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{51D8DC
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{531BF418-EB21-4311-9412-F13B8AC5325B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DurableFunctionSample", "samples\DurableFunctionSample\DurableFunctionSample.csproj", "{5F21B8AC-7328-4DE4-92FB-FF0DC7DA61F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +34,10 @@ Global
 		{5077E0FB-7011-4869-84B7-B0D67964F832}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5077E0FB-7011-4869-84B7-B0D67964F832}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5077E0FB-7011-4869-84B7-B0D67964F832}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F21B8AC-7328-4DE4-92FB-FF0DC7DA61F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F21B8AC-7328-4DE4-92FB-FF0DC7DA61F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F21B8AC-7328-4DE4-92FB-FF0DC7DA61F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F21B8AC-7328-4DE4-92FB-FF0DC7DA61F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -37,6 +45,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{51790AFE-5B8E-4795-9EA3-D2B15D04B5AC} = {7EC858EE-3481-4A82-AED4-CB00C34F42D0}
 		{5077E0FB-7011-4869-84B7-B0D67964F832} = {78BCF152-C22C-408F-9FB1-0F8C99B154B5}
+		{5F21B8AC-7328-4DE4-92FB-FF0DC7DA61F8} = {531BF418-EB21-4311-9412-F13B8AC5325B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5E9AC327-DE18-41A5-A55D-E44CB4281943}

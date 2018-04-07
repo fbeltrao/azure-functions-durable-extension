@@ -49,8 +49,10 @@ namespace Microsoft.Azure.WebJobs.Extensions.DurableTask
             new ConcurrentDictionary<FunctionName, ITriggeredFunctionExecutor>();
 
         private readonly AsyncLock taskHubLock = new AsyncLock();
+        private OrchestrationServiceProvider orchestrationProvider;
 
-        private AzureStorageOrchestrationService orchestrationService;
+        // private AzureStorageOrchestrationService orchestrationService;
+        private IOrchestrationService orchestrationService;
         private TaskHubWorker taskHubWorker;
         private bool isTaskHubWorkerStarted;
 
@@ -111,15 +113,6 @@ namespace Microsoft.Azure.WebJobs.Extensions.DurableTask
         /// A positive integer configured by the host. The default value is 100.
         /// </value>
         public int MaxConcurrentTaskOrchestrationWorkItems { get; set; } = 100;
-
-        /// <summary>
-        /// Gets or sets the name of the Azure Storage connection string used to manage the underlying Azure Storage resources.
-        /// </summary>
-        /// <remarks>
-        /// If not specified, the default behavior is to use the standard `AzureWebJobsStorage` connection string for all storage usage.
-        /// </remarks>
-        /// <value>The name of a connection string that exists in the app's application settings.</value>
-        public string AzureStorageConnectionStringName { get; set; }
 
         /// <summary>
         /// Gets or sets the notification URL for polling status of instances.
@@ -211,8 +204,9 @@ namespace Microsoft.Azure.WebJobs.Extensions.DurableTask
             context.AddBindingRule<ActivityTriggerAttribute>()
                 .BindToTrigger(new ActivityTriggerAttributeBindingProvider(this, context, this.traceHelper));
 
-            AzureStorageOrchestrationServiceSettings settings = this.GetOrchestrationServiceSettings();
-            this.orchestrationService = new AzureStorageOrchestrationService(settings);
+            this.orchestrationProvider = new OrchestrationServiceProvider();
+            this.orchestrationService = this.orchestrationProvider.Create(this);
+
             this.taskHubWorker = new TaskHubWorker(this.orchestrationService, this, this);
             this.taskHubWorker.AddOrchestrationDispatcherMiddleware(this.OrchestrationMiddleware);
         }
@@ -344,45 +338,14 @@ namespace Microsoft.Azure.WebJobs.Extensions.DurableTask
                 attribute,
                 attr =>
                 {
-                    AzureStorageOrchestrationServiceSettings settings = this.GetOrchestrationServiceSettings(attr);
-                    var innerClient = new AzureStorageOrchestrationService(settings);
+                    var innerClient = this.orchestrationProvider.CreateClient(this, attr);
+                    
                     return new DurableOrchestrationClient(innerClient, this, attr, this.traceHelper);
                 });
 
             return client;
         }
 
-        internal AzureStorageOrchestrationServiceSettings GetOrchestrationServiceSettings(
-                OrchestrationClientAttribute attribute)
-        {
-            return this.GetOrchestrationServiceSettings(
-                connectionNameOverride: attribute.ConnectionName,
-                taskHubNameOverride: attribute.TaskHub);
-        }
-
-        internal AzureStorageOrchestrationServiceSettings GetOrchestrationServiceSettings(
-            string connectionNameOverride = null,
-            string taskHubNameOverride = null)
-        {
-            string connectionName = connectionNameOverride ?? this.AzureStorageConnectionStringName ?? ConnectionStringNames.Storage;
-            string resolvedStorageConnectionString = AmbientConnectionStringProvider.Instance.GetConnectionString(connectionName);
-
-            if (string.IsNullOrEmpty(resolvedStorageConnectionString))
-            {
-                throw new InvalidOperationException("Unable to find an Azure Storage connection string to use for this binding.");
-            }
-
-            return new AzureStorageOrchestrationServiceSettings
-            {
-                StorageConnectionString = resolvedStorageConnectionString,
-                TaskHubName = taskHubNameOverride ?? this.HubName,
-                PartitionCount = this.PartitionCount,
-                ControlQueueVisibilityTimeout = this.ControlQueueVisibilityTimeout,
-                WorkItemQueueVisibilityTimeout = this.WorkItemQueueVisibilityTimeout,
-                MaxConcurrentTaskOrchestrationWorkItems = this.MaxConcurrentTaskOrchestrationWorkItems,
-                MaxConcurrentTaskActivityWorkItems = this.MaxConcurrentTaskActivityWorkItems,
-            };
-        }
 
         internal void RegisterOrchestrator(FunctionName orchestratorFunction, ITriggeredFunctionExecutor executor)
         {

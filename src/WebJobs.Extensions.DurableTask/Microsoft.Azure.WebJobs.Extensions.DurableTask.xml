@@ -90,15 +90,6 @@
             A positive integer configured by the host. The default value is 100.
             </value>
         </member>
-        <member name="P:Microsoft.Azure.WebJobs.Extensions.DurableTask.DurableTaskExtension.AzureStorageConnectionStringName">
-            <summary>
-            Gets or sets the name of the Azure Storage connection string used to manage the underlying Azure Storage resources.
-            </summary>
-            <remarks>
-            If not specified, the default behavior is to use the standard `AzureWebJobsStorage` connection string for all storage usage.
-            </remarks>
-            <value>The name of a connection string that exists in the app's application settings.</value>
-        </member>
         <member name="P:Microsoft.Azure.WebJobs.Extensions.DurableTask.DurableTaskExtension.NotificationUrl">
             <summary>
             Gets or sets the notification URL for polling status of instances.
@@ -221,6 +212,20 @@
             <summary>
             Task orchestration implementation which delegates the orchestration implementation to a function.
             </summary>
+        </member>
+        <member name="T:Microsoft.Azure.WebJobs.Extensions.DurableTask.OrchestrationServiceProvider">
+            <summary>
+            Provides the <see cref="T:DurableTask.Core.IOrchestrationService"/> to be used
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.WebJobs.Extensions.DurableTask.OrchestrationServiceProvider.AzureStorageConnectionStringName">
+            <summary>
+            Gets or sets the name of the Azure Storage connection string used to manage the underlying Azure Storage resources.
+            </summary>
+            <remarks>
+            If not specified, the default behavior is to use the standard `AzureWebJobsStorage` connection string for all storage usage.
+            </remarks>
+            <value>The name of a connection string that exists in the app's application settings.</value>
         </member>
         <member name="T:Microsoft.Azure.WebJobs.Extensions.DurableTask.StatusResponsePayload">
             <summary>
@@ -967,7 +972,7 @@
             <value>The name of a connection string that exists in the app's application settings.</value>
             <remarks>
             The default behavior is to use the value specified in
-            <see cref="P:Microsoft.Azure.WebJobs.Extensions.DurableTask.DurableTaskExtension.AzureStorageConnectionStringName"/>. If no value exists there, then
+            <see cref="!:DurableTaskExtension.AzureStorageConnectionStringName"/>. If no value exists there, then
             the default behavior is to use the standard `AzureWebJobsStorage` connection string for all storage usage.
             </remarks>
         </member>

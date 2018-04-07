@@ -347,8 +347,8 @@ namespace Microsoft.Azure.WebJobs.Extensions.DurableTask
             string instancePrefix = baseUrl + InstancesControllerSegment + WebUtility.UrlEncode(instanceId);
 
             string taskHub = WebUtility.UrlEncode(attribute.TaskHub ?? this.config.HubName);
-            string connection = WebUtility.UrlEncode(attribute.ConnectionName ?? this.config.AzureStorageConnectionStringName ?? ConnectionStringNames.Storage);
-
+            //string connection = WebUtility.UrlEncode(attribute.ConnectionName ?? this.config.AzureStorageConnectionStringName ?? ConnectionStringNames.Storage);
+            string connection = WebUtility.UrlEncode(attribute.ConnectionName ?? string.Empty);
             string querySuffix = $"{TaskHubParameter}={taskHub}&{ConnectionParameter}={connection}";
             if (!string.IsNullOrEmpty(notificationUri.Query))
             {
